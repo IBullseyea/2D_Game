@@ -6,6 +6,8 @@ public class KarakterHareket : MonoBehaviour
     public float hareketHizi = 5f;
     private float yatayInput;
 
+    private bool sagaBakiyor = true;
+
     //zıplama için gerekli değişkenler
     public float ziplamaGucu = 10f;
     private bool yerdeMi;
@@ -15,10 +17,14 @@ public class KarakterHareket : MonoBehaviour
     public LayerMask zeminLayer; //zemin katmanı
 
     private Rigidbody2D rb;// Karakterin fizik bileşeni
+
+    private Animator animator; // Karakterin animatör bileşeni
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>(); 
+
+        animator = GetComponentInChildren<Animator>();
 
     }
 
@@ -40,6 +46,8 @@ public class KarakterHareket : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, ziplamaGucu);
         }
 
+        animator.SetBool("isMoving", yatayInput != 0);
+
 
 
 
@@ -58,5 +66,26 @@ public class KarakterHareket : MonoBehaviour
         // Rigidbody'nin yatay hızını (velocity.x) hesapla
         // (Dikey hızı (velocity.y) koru, zıplamayı bozmasın)
         rb.linearVelocity = new Vector2(yatayInput * hareketHizi, rb.linearVelocity.y);
+
+        if (yatayInput > 0 && !sagaBakiyor)
+        {
+            Flip();
+        }
+        else if (yatayInput < 0 && sagaBakiyor)
+        {
+            Flip();
+        }
+    }
+
+    void Flip()
+    {
+        //'sagaBakiyor' değişkeninin değerini tersine çevir (true ise false, false ise true yap)
+        sagaBakiyor = !sagaBakiyor;
+        // Karakterin ölçeğini al
+        Vector3 karakterOlcek = transform.localScale;
+        // X eksenindeki ölçeği -1 ile çarparak yönünü değiştir
+        karakterOlcek.x *= -1;
+        // Yeni ölçeği karaktere uygula
+        transform.localScale = karakterOlcek;
     }
 }
