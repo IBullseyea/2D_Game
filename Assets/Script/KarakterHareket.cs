@@ -22,8 +22,9 @@ public class KarakterHareket : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); 
+        rb = GetComponent<Rigidbody2D>();
 
+        // Animatör bileşenini al
         animator = GetComponentInChildren<Animator>();
 
     }
@@ -44,13 +45,21 @@ public class KarakterHareket : MonoBehaviour
             // Rigidbody'nin dikey hızını (velocity.y) anında zıplama gücüne eşitle.
             // (Mevcut yatay hızı (velocity.x) koru)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, ziplamaGucu);
+
+            // Zıplama animasyonunu tetikle
+            animator.SetTrigger("isJumping");
         }
 
+        // Animasyonları kontrol et
         animator.SetBool("isMoving", yatayInput != 0);
+        animator.SetBool("isGrounded", yerdeMi);
 
 
 
 
+
+
+        // HAREKETİ FİZİKSEL OLARAK UYGULA
         Vector2 yeniHiz = new Vector2(yatayInput * hareketHizi, rb.linearVelocity.y);
         rb.linearVelocity = yeniHiz;
 
